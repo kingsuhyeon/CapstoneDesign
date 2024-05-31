@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 배상현 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P:A 내정보</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/sports.css" th:href="@{/css/sports.css}">
+</head>
+<body>
+<header class="bg-dark text-white py-4">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div style="color: white;">
+                <div style="color: white;" th:utext="${sportsInfo.icon}">
+                    <img src="../../static/images/table-tennis-icon.png" alt="탁구" style="width: 2em; height: 1.5em;">
+                </div>
+            </div>
+            <h1 class="m-0" th:utext="${sportsInfo.initialName}">P:A</h1>
+        </div>
+        <div class="form-group d-flex align-items-center search-bar">
+            <input type="text" class="form-control mr-2" placeholder="검색">
+        </div>
+
+        <div class="icon-container">
+            <a th:href="@{/user/myPage}" Href="myPage.html" class="text-white mx-2"><i class="bi bi-person-circle"></i></a>
+        </div>
+    </div>
+</header>
+<nav class="bg-secondary py-2">
+    <div class="container text-center">
+        <a href="#" class="text-white mx-2 ">멘토-멘티</a>
+        <a href="../sports/sports_team.html" th:href="@{|/sports/${sportsName}/team|}" class="text-white mx-2">팀 매칭</a>
+        <a href="../mercenaryMatch.html" th:href="@{|/sports/${sportsName}/mercenaryMatching|}" class="text-white mx-2">용병 매칭</a>
+        <a href="../sports/sports_social.html" th:href="@{|/sports/${sportsName}/social|}" class="text-white mx-2">소셜 매치</a>
+        <a href="#" class="text-white mx-2">구장 예약</a>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong th:text="|내 정보 --- ${user.name}님의 정보|">내 정보 --- ex)Sanghyun 님의 정보 </strong>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong th:text="|ID: ${user.loginId}|">ID:</strong> </li>
+                        <li class="list-group-item"><strong th:text="|이름: ${user.name}|">이름:</strong> </li>
+                        <li class="list-group-item"><strong th:text="|이메일: ${user.email}|">이메일:</strong> </li>
+                        <li class="list-group-item"><strong th:text="|전화번호: ${user.phone}|">전화번호:</strong> </li>
+                        <li class="list-group-item"><strong th:text="|잔액: ${user.money}원|"></strong>
+                            <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+                            <button onclick="requestPay()" class="btn btn-primary">충전</button>
+                            <script>
+                                function requestPay() {
+                                    PortOne.requestPayment({
+                                        storeId: "store-4cb3c0f3-2666-447b-a792-7bab8e0d607f",
+                                        paymentId: `payment-${crypto.randomUUID()}`,
+                                        orderName: "테스트 결제",
+                                        totalAmount: 100,
+                                        currency: "KRW",
+                                        channelKey: "channel-key-51a72412-c983-4766-ac04-865a71bb7fc1",
+                                        payMethod: "EASY_PAY",
+                                        easyPay: {
+                                            easyPayProvider: "KAKAOPAY",
+                                        },
+                                    });
+                                }
+                            </script>
+                        </li>
+                        <li class="list-group-item">
+                            <a th:href="@{/user/logout}" href="/user/logout" class="btn btn-danger">로그아웃</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-white py-3">
+    <div class="container text-center">
+        <p>&copy; 2024 P:A. All rights reserved.</p>
+
+    </div>
+</footer>
+
+</body>
+</html>

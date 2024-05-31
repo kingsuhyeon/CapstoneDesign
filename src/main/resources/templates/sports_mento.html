@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>멘토-멘티</title>
+    <!-- 부트스트랩 CDN 추가 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/sports.css" th:href="@{/css/sports.css}">
+</head>
+<body>
+<header class="bg-dark text-white py-4">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div style="color: white;">
+                <div style="color: white;" th:utext="${sportsInfo.icon}">
+                    <img  src="../static/images/table-tennis-icon.png" alt="탁구" style="width: 2em; height: 1.5em;">
+                </div>
+            </div>
+            <h1 class="m-0" th:utext="${sportsInfo.initialName}">P:A</h1>
+        </div>
+        <div class="form-group d-flex align-items-center search-bar">
+            <input type="text" class="form-control mr-2" placeholder="검색">
+        </div>
+
+        <div class="icon-container">
+            <a th:href="@{/user/myPage(sports=${sports})}" href="/user/myPage" class="text-white mx-2"><i class="bi bi-person-circle"></i></a>
+        </div>
+    </div>
+</header>
+<nav class="bg-secondary py-2">
+    <div class="container text-center">
+        <a href="../sports_mento.html" th:href="@{/mentoMentee(sports =${sports})}" class="text-white mx-2 ">멘토-멘티</a>
+        <a href="teamMatch.html" th:href="@{/team/{sports}(sports =${sports})}" class="text-white mx-2">팀 매칭</a>
+        <a href="mercenaryMatch.html" th:href="@{/mercenary/{sports}(sports =${sports})}" class="text-white mx-2">용병 매칭</a>
+        <a href="socialMatch.html" th:href="@{/social/{sports}(sports =${sports})}" class="text-white mx-2" id="current-page">소셜 매치</a>
+        <a href="../groundReservationForm.html" th:href="@{/reservation/{sports}(sports =${sports})}" class="text-white mx-2">구장 예약</a>
+        <a href="team.html" th:href="@{/team}" class="text-white mx-2">팀 생성</a>
+    </div>
+</nav>
+<section class="container mt-4">
+    <h2>멘토에 대한 평가</h2>
+    <!-- 평점 및 후기 작성 폼 -->
+    <form id="review-form">
+        <div class="form-group">
+            <label for="mentor-name">멘토 이름</label>
+            <input type="text" class="form-control" id="mentor-name" placeholder="멘토 이름을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="rating">평점</label>
+            <select class="form-control" id="rating">
+                <option value="5">5점 (최고)</option>
+                <option value="4">4점</option>
+                <option value="3">3점</option>
+                <option value="2">2점</option>
+                <option value="1">1점 (최악)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="review">후기</label>
+            <textarea class="form-control" id="review" rows="3" placeholder="후기를 입력하세요"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">평점 및 후기 남기기</button>
+    </form>
+
+    <!-- 이전에 작성된 후기 목록 -->
+    <div id="review-list" class="mt-4">
+        <!-- 후기가 여기에 동적으로 추가됩니다 -->
+    </div>
+</section>
+<footer class="bg-dark text-white py-3">
+    <div class="container text-center">
+        <p>&copy; 2024 P:A. All rights reserved.</p>
+    </div>
+</footer>
+<!-- 평점 및 후기 작성 및 조회를 위한 JavaScript 코드 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 평점 및 후기 작성 폼 제출 시 이벤트 처리
+        document.getElementById("review-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // 폼의 기본 동작 방지
+
+            // 폼 입력값 가져오기
+            var mentorName = document.getElementById("mentor-name").value;
+            var rating = document.getElementById("rating").value;
+            var review = document.getElementById("review").value;
+
+            // 새로운 후기 요소 생성
+            var reviewElement = document.createElement("div");
+            reviewElement.classList.add("review");
+            reviewElement.innerHTML = `
+                <h3>${mentorName}</h3>
+                <p><strong>평점:</strong> ${rating}</p>
+                <p>${review}</p>
+            `;
+
+            // 후기 목록에 추가
+            document.getElementById("review-list").appendChild(reviewElement);
+
+            // 입력 폼 초기화
+            document.getElementById("mentor-name").value = "";
+            document.getElementById("rating").value = "5"; // 기본값은 5점
+            document.getElementById("review").value = "";
+        });
+    });
+</script>
+</body>
+</html>

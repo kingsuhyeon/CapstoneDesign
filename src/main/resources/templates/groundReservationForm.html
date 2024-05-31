@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${sportsInfo.initialName}">P:A</title>
+    <!-- 부트스트랩 CDN 추가 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!--Font Awesome-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/sports.css" th:href="@{/css/sports.css}">
+
+</head>
+<body>
+<header class="bg-dark text-white py-4">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div style="color: white;">
+                <div style="color: white;" th:utext="${sportsInfo.icon}">
+                    <img src="../static/images/table-tennis-icon.png" alt="탁구" style="width: 2em; height: 1.5em;">
+                </div>
+            </div>
+            <h1 class="m-0" th:utext="${sportsInfo.initialName}">P:A</h1>
+        </div>
+        <div class="form-group d-flex align-items-center search-bar">
+            <input type="text" class="form-control mr-2" placeholder="검색">
+        </div>
+
+        <div class="icon-container">
+            <a href="/users/myPage" class="text-white mx-2"><i class="bi bi-person-circle"></i></a>
+        </div>
+    </div>
+</header>
+<nav class="bg-secondary py-2">
+    <div class="container text-center">
+        <a href="#" class="text-white mx-2 ">멘토-멘티</a>
+        <a href="sports_team.html" th:href="@{/team/{sports}(sports =${sports})}" class="text-white mx-2">팀 매칭</a>
+        <a href="mercenaryMatching.html" th:href="@{/mercenary/{sports}(sports =${sports})}" class="text-white mx-2">용병 매칭</a>
+        <a href="match/socialMatch.html" th:href="@{/social/{sports}(sports =${sports})}" class="text-white mx-2" id="current-page">소셜 매치</a>
+        <a href="groundReservation.html" th:href="@{/reservation/{sports}(sports =${sports})}" class="text-white mx-2">구장 예약</a>
+        <a href="groundReservation.html" th:href="@{/team}" class="text-white mx-2">팀 생성</a>
+    </div>
+</nav>
+<section class="container mt-4">
+    <h2>구장 예약</h2>
+    <form th:action="@{/reservation/{sports}(sports=${sports})}" method="POST">
+        <div class="form-group">
+            <label for="date">날짜 선택</label>
+            <input type="date" id="date" name="date" class="form-control" th:value="${today}">
+        </div>
+        <div class="form-group">
+            <label for="time">시간 선택</label>
+            <select id="time" name="time" class="form-control">
+                <option value="8">08:00</option>
+                <option value="9">09:00</option>
+                <option value="10">10:00</option>
+                <option value="11">11:00</option>
+                <option value="12">12:00</option>
+                <option value="13">13:00</option>
+                <option value="14">14:00</option>
+                <option value="15">15:00</option>
+                <option value="16">16:00</option>
+                <option value="17">17:00</option>
+                <option value="18">18:00</option>
+                <option value="19">19:00</option>
+                <option value="20">20:00</option>
+                <option value="21">21:00</option>
+                <option value="22">22:00</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="location">구장 선택</label>
+            <select id="location" name="groundId" class="form-control">
+                <option th:each="ground : ${grounds}" th:value="${ground.id}" th:text="${ground.name}">서울</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="gender">모집 성별 선택</label>
+            <select class="form-control" name="gender" id="gender">
+                <option value="MALE" th:if="${session.user.gender.equals(MALE)}">남성</option>
+                <option value="FEMALE" th:if="${session.user.gender.equals(FEMALE)}">여성</option>
+                <option value="BOTH">혼성</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="maxSize">모집 인원 선택</label>
+            <select class="form-control" name="maxSize" id="maxSize">
+                <option value="2">1vs1</option>
+                <option value="4">2vs2</option>
+                <option value="6">3vs3</option>
+                <option value="8">4vs4</option>
+                <option value="10">5vs5</option>
+                <option value="12">6vs6</option>
+                <option value="14">7vs7</option>
+                <option value="16">8vs8</option>
+                <option value="18">9vs9</option>
+                <option value="20">10vs10</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="matchCategory">매치 종류 선택</label>
+            <select id="matchCategory" name="match" class="form-control">
+                <option value="SOCIAL">소셜 매치</option>
+                <option value="TEAM">팀 매치</option>
+                <option value="MERCENARY">용병 매치</option>
+            </select>
+        </div>
+        <div id="mercenarySize" class="form-group" style="display: none">
+        <label for="size">용병 인원 수</label>
+        <input type="number" min="1"  value="1" name="mercenarySize" class="form-control w-50 mb-2" id="size" placeholder="모집할 용병 수를 적으세요">
+        </div>
+        <div id="memberList" class="form-group" style="display: none">
+            <h1 th:if="${teamMembers == null}">팀에 가입하지 않았어요</h1>
+            <h1 th:if="${teamMembers != null}">멤버 목록</h1>
+                <div th:if="${teamMembers != null}" class="match-info" th:each="member : ${teamMembers}">
+                    <input th:id="|label${member.id}|" type='checkbox' name='userIdList' th:value="${member.id}"/>
+                    <label th:for="|label${member.id}|" th:text="|${member.name}|"></label><br>
+                </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">구장 예약</button>
+    </form>
+</section>
+<footer class="bg-dark text-white py-3">
+    <div class="container text-center">
+        <p>&copy; 2024 B:A. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("matchCategory").onchange = function() {
+        let selectedValue = this.value;
+        let memberList = document.getElementById("memberList")
+        let mercenarySize = document.getElementById("mercenarySize")
+
+        if(selectedValue === "SOCIAL"){
+            memberList.style.display = "none";
+            mercenarySize.style.display = "none";
+        }
+
+        if(selectedValue === "TEAM"){
+            memberList.style.display = "inline";
+            mercenarySize.style.display = "none";
+        }
+
+        if(selectedValue === "MERCENARY"){
+            memberList.style.display = "inline";
+            mercenarySize.style.display = "inline";
+        }
+
+    };
+</script>
+</body>
+</html>
